@@ -30,9 +30,10 @@ Default credentials are:
 
 To add a new WordPress site:
 
-1. Create new database for your wordpress, e.g. wpsite1
-2. Find your local UID and GID using the `id` command. replace `1000:1000` in the following steps with your local UID/GID.
-3. Create a `docker-compose.wpsite1.yml` file with the following WordPress service definition:
+1. Create new directory to store your WordPress files, e.g. wpsite1
+2. Create new database for your wordpress, e.g. wpsite1
+3. Find your local UID (User ID) and GID (Group ID) using following bash command: `id -u && id -g`
+4. Create `docker-compose.wpsite1.yml` file with the following WordPress service definition:
 
 ```yaml
 version: '3'
@@ -62,7 +63,7 @@ networks:
 
 This will deploy a new WordPress container connected to the shared MySQL database.
 
-4. Repeat to add additional sites.
+5. Repeat to add additional sites.
 
 ## Deploying WordPress Without Docker Compose
 
@@ -82,5 +83,3 @@ This provides more flexibility to deploy WordPress without defining a full Compo
 * The host volume mount directory instead of `./wpsite1`
 * The MySQL database name instead of `wpsite1`
 * The `user: 1000:1000` line with your local UID/GID. 
-
-4. Run `docker-compose -f docker-compose.wpsite1.yml up -d` 
