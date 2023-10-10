@@ -30,7 +30,8 @@ Default credentials are:
 
 To add a new WordPress site:
 
-1. Create a `docker-compose.site1.yml` file with a WordPress service definition, like:
+1. Create new database for your wordpress, e.g. site1
+2. Create a `docker-compose.site1.yml` file with a WordPress service definition, like:
 
 ```yaml
 version: '3'
@@ -48,7 +49,7 @@ services:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: root
-      WORDPRESS_DB_NAME: wordpress-1
+      WORDPRESS_DB_NAME: site1
     networks:
       - wpsites
 
@@ -69,9 +70,17 @@ This will deploy a new WordPress container connected to the shared MySQL databas
 This can also be deployed using `docker run` directly, without a Compose file:
 
 ```bash
-docker run -d --name wordpress -p 8000:80 -v ./site1/:/var/www/html --user 1000:1000 -e WORDPRESS_DB_HOST=db -e WORDPRESS_DB_USER=root -e WORDPRESS_DB_PASSWORD=root -e WORDPRESS_DB_NAME=wordpress-1 --network wpsites --restart always wordpress:latest
+docker run -d --name wordpress -p 8000:80 -v ./site1/:/var/www/html --user 1000:1000 -e WORDPRESS_DB_HOST=db -e WORDPRESS_DB_USER=root -e WORDPRESS_DB_PASSWORD=root -e WORDPRESS_DB_NAME=site1 --network wpsites --restart always wordpress:latest
 
 ```
+
+This example uses site1 for the volume mount and database name.
+
+#### Before running, be sure to customize:
+
+* The host volume mount directory instead of ``./site1``
+* The MySQL database name instead of ``site1``
+* The container name if needed
 
 This will create a WordPress container in the same network as the MySQL database.
 
