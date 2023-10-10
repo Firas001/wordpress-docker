@@ -30,26 +30,27 @@ Default credentials are:
 
 To add a new WordPress site:
 
-1. Create new database for your wordpress, e.g. site1
-2. Create a `docker-compose.site1.yml` file with a WordPress service definition, like:
+1. Create new database for your wordpress, e.g. wpsite1
+2. Find your local UID and GID using the `id` command. replace `1000:1000` in the following steps with your local UID/GID.
+3. Create a `docker-compose.wpsite1.yml` file with the following WordPress service definition:
 
 ```yaml
 version: '3'
 
 services:
 
-  wordpress:
+  wpsite1:
     image: wordpress:latest
     ports:
       - '8000:80'
     restart: always
-    volumes: ['./site1/:/var/www/html']
+    volumes: ['./wpsite1/:/var/www/html']
     user: 1000:1000
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: root
-      WORDPRESS_DB_NAME: site1
+      WORDPRESS_DB_NAME: wpsite1
     networks:
       - wpsites
 
@@ -59,29 +60,27 @@ networks:
 
 ```
 
-2. Run `docker-compose -f docker-compose.site1.yml up -d` 
-
 This will deploy a new WordPress container connected to the shared MySQL database.
 
-3. Repeat to add additional sites.
+4. Repeat to add additional sites.
 
 ## Deploying WordPress Without Docker Compose
 
 This can also be deployed using `docker run` directly, without a Compose file:
 
 ```bash
-docker run -d --name wordpress -p 8000:80 -v ./site1/:/var/www/html --user 1000:1000 -e WORDPRESS_DB_HOST=db -e WORDPRESS_DB_USER=root -e WORDPRESS_DB_PASSWORD=root -e WORDPRESS_DB_NAME=site1 --network wpsites --restart always wordpress:latest
+docker run -d --name wpsite1 -p 8000:80 -v ./wpsite1/:/var/www/html --user 1000:1000 -e WORDPRESS_DB_HOST=db -e WORDPRESS_DB_USER=root -e WORDPRESS_DB_PASSWORD=root -e WORDPRESS_DB_NAME=wpsite1 --network wpsites --restart always wordpress:latest
 
 ```
 
-This example uses site1 for the volume mount and database name.
-
-#### Before running, be sure to customize:
-
-* The host volume mount directory instead of ``./site1``
-* The MySQL database name instead of ``site1``
-* The container name if needed
-
-This will create a WordPress container in the same network as the MySQL database.
-
 This provides more flexibility to deploy WordPress without defining a full Compose file.
+
+
+## Before running, be sure to customize:
+
+* The container name with your desired name instead of `wpsite1`
+* The host volume mount directory instead of `./wpsite1`
+* The MySQL database name instead of `wpsite1`
+* The `user: 1000:1000` line with your local UID/GID. 
+
+4. Run `docker-compose -f docker-compose.wpsite1.yml up -d` 
